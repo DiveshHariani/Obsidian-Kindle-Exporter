@@ -1,0 +1,9 @@
+{
+	"id": "obsidian-to-kindle-1",
+	"name": "Export Notes to Kindle",
+	"version": "1.0.0",
+	"minAppVersion": "0.15.0",
+	"description": "This plugin allows you to export your notes as pdf to the kindle",
+	"author": "Divesh Hariani",
+	"isDesktopOnly": false
+}
