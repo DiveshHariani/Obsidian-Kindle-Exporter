@@ -1,4 +1,5 @@
 import { App, Plugin, PluginSettingTab, Setting } from 'obsidian';
+import ExporterModal from './ExporterModal';
 
 interface KindleExporterSettings {
 	email: string,
@@ -9,17 +10,20 @@ interface KindleExporterSettings {
 const DEFAULT_SETTINGS: KindleExporterSettings = {
 	email: '',
 	password: '',
-	kindleEmail: ""
+	kindleEmail: ''
 }
 
 export default class KindleExporter extends Plugin {
 	settings: KindleExporterSettings;
 
 	async onload() {
+		// register ExporterView
+		
 		await this.loadSettings();
 
 		const ribbonIconEl = this.addRibbonIcon('dice', 'Kindle Exporter Plugin', (evt: MouseEvent) => {
-			
+			// this.showView();
+			new ExporterModal(this.app).open();
 		});
 
 		// Perform additional things with the ribbon
@@ -50,7 +54,6 @@ export default class KindleExporter extends Plugin {
 		await this.saveData(this.settings);
 	}
 }
-
 
 class KindleExporterSettingsTab extends PluginSettingTab {
 	plugin: KindleExporter;
