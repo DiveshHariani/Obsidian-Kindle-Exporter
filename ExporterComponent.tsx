@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useState } from 'react';
 import useApp from './hooks/useApp';
 import { makePDF } from 'MdToPDFConverter';
-import * as path from "path";
+// import * as path from "path";
 import { FileSystemAdapter } from 'obsidian';
 
 export const ExporterComponent = () => {
@@ -23,8 +23,8 @@ export const ExporterComponent = () => {
         const markDownFiles = app?.vault.getMarkdownFiles();
         if(markDownFiles)
             for(const i of markDownFiles) {
-                const filePath = path.join(rootDir, i.path);
-                makePDF(filePath, i.name);
+                makePDF(rootDir, i.name);
+                console.log(rootDir);
             }
     }
     return (
