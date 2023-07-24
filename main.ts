@@ -1,7 +1,7 @@
 import { App, Plugin, PluginSettingTab, Setting } from 'obsidian';
 import ExporterModal from './ExporterModal';
 
-interface KindleExporterSettings {
+export interface KindleExporterSettings {
 	email: string,
 	password: string,
 	kindleEmail: string
@@ -17,11 +17,10 @@ export default class KindleExporter extends Plugin {
 	settings: KindleExporterSettings;
 
 	async onload() {
-		
 		await this.loadSettings();
-
+		console.log(this.settings);
 		const ribbonIconEl = this.addRibbonIcon('dice', 'Kindle Exporter Plugin', (evt: MouseEvent) => {
-			new ExporterModal(this.app).open();
+			new ExporterModal(this.app, this.settings).open();
 		});
 
 
@@ -29,11 +28,6 @@ export default class KindleExporter extends Plugin {
 
 		this.addSettingTab(new KindleExporterSettingsTab(this.app, this));
 
-		/* this.registerDomEvent(document, 'click', (evt: MouseEvent) => {
-			console.log('click', evt);
-		});*/
-
-		// When registering intervals, this function will automatically clear the interval when the plugin is disabled.
 		this.registerInterval(window.setInterval(() => console.log('setInterval'), 5 * 60 * 1000));
 	}
 

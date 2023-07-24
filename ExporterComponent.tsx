@@ -4,15 +4,15 @@ import useApp from './hooks/useApp';
 import { makePDF } from 'MdToPDFConverter';
 // import * as path from "path";
 import { FileSystemAdapter } from 'obsidian';
+import { KindleExporterSettings } from 'main';
 
-export const ExporterComponent = () => {
+export const ExporterComponent = ({settings}: {settings: KindleExporterSettings}) => {
     const [password, setPassword] = useState("");
     const app = useApp();
 
     const uploadToKindle = () => {
         console.log(password);
         console.log(app?.vault.getMarkdownFiles()[0]);
-        // console.log(app?.vault.getRoot().vault.adapter?.basePath);
 
         let rootDir = "";
         const adapter = app?.vault.adapter;
@@ -20,12 +20,11 @@ export const ExporterComponent = () => {
             rootDir = adapter.getBasePath();
         } 
 
-        const markDownFiles = app?.vault.getMarkdownFiles();
-        if(markDownFiles)
-            for(const i of markDownFiles) {
-                makePDF(rootDir, i.name);
-                console.log(rootDir);
-            }
+        // const markDownFiles = app?.vault.getMarkdownFiles();
+        const activeMarkDownFile = app?.workspace.getActiveFile();
+        const kindleEmail = settings.kindleEmail;
+        console.log(activeMarkDownFile?.name);
+        if(activeMarkDownFile && activeMarkDownFile.name) makePDF(rootDir, activeMarkDownFile?.name, kindleEmail);
     }
     return (
         <>

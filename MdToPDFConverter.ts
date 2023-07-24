@@ -1,17 +1,19 @@
-// import nodePandoc from "node-pandoc";
-// import * as fs from 'fs';
 import { exec } from 'child_process';
 import * as nodemailer from "nodemailer";
+import * as dotenv from "dotenv";
 
-export const makePDF = async (rootDir: string, filename: string) => {
-    // console.log(filePath); pandoc {filename}.md -o pdfs/{filename}.pdf
-    console.log(rootDir);
-    console.log(filename);
-    exec(`/opt/homebrew/bin/pandoc /Users/diveshhariani/Study/plugin-development/Test-Document.md -o /Users/diveshhariani/Study/plugin-development/Test-Document.pdf --pdf-engine=/Library/TeX/texbin/pdflatex`, (err, res) => {
+export const makePDF = async (rootDir: string, filename: string, kindleEmail: string) => {
+    dotenv.config({
+        path: `${rootDir}/.obsidian/plugins/obsidian-sample-plugin/.env`,
+        debug: true
+    });
+    console.log("EMAIL ID", process.env.GMAIL_USER);
+    exec(`/opt/homebrew/bin/pandoc /Users/diveshhariani/Study/plugin-development/${filename} -o /Users/diveshhariani/Study/plugin-development/${filename.split(".")[0]}.pdf --pdf-engine=/Library/TeX/texbin/pdflatex`, (err, res) => {
         if(err) {
             console.log(err.message);
         } else {
             console.log(res);
+            console.log("GMAIL USER", process.env);
             const transporter = nodemailer.createTransport({
                 service: 'gmail',
                 auth: {
@@ -26,9 +28,16 @@ export const makePDF = async (rootDir: string, filename: string) => {
             
             const mailOptions = {
                 from: 'diveshkindleaccess@gmail.com',
-                to: 'diveshkindleaccess@gmail.com',
-                subject: "Test Email",
-                text: "This is test email"
+                to: kindleEmail,
+                subject: "Convert",
+                attachments: [
+                    {
+                        filename: `${filename.split(".")[0]}.pdf`,
+                        path:`/Users/diveshhariani/Study/plugin-development/${filename.split(".")[0]}.pdf`,
+                        contentType: "application/pdf"
+                    }
+                ],
+                html: '<div dir="auto"></div>'
             }
             console.log('here');
             transporter.sendMail(mailOptions, (err, res) => {
